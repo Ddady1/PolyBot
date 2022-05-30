@@ -38,9 +38,9 @@ class QuoteBot(Bot):
 
         if update.message.text == 'Don\'t quote me please':
             to_quote = False
-
-        self.send_text(update, f'Your original message: {update.message.text}', quote=to_quote)
-
+            self.send_text(update, f'QuotBot message: {update.message.text}', quote=to_quote)
+        else:
+            self.send_text(update, f'Original message: {update.message.text}')
 
 class YoutubeBot(Bot):
     pass
@@ -50,6 +50,6 @@ if __name__ == '__main__':
     with open('.telegramToken') as f:
         _token = f.read()
 
-    my_bot = Bot(_token)
+    my_bot = QuoteBot(_token)
     my_bot.start()
 
