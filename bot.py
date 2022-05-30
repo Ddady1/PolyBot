@@ -20,7 +20,7 @@ class Bot:
 
     def _message_handler(self, update, context):
         """Main messages handler"""
-        self.send_text(update, f'Your original message: {update.message.text}')
+        self.send_text(update, f'Your original : {update.message.text}')
 
     def send_video(self, update, context, file_path):
         """Sends video to a chat"""
