@@ -47,7 +47,7 @@ class YoutubeBot(Bot):
         videoname=update.message.text
         search_download_youtube_video(video_name=videoname, num_results=1)
 
-class Picture(Bot):
+class PictureBot(Bot):
     def _message_handler(self, update, context):
         picturename = update.message.text
         picture_download_url(picturename)
@@ -56,6 +56,6 @@ if __name__ == '__main__':
     with open('.telegramToken') as f:
         _token = f.read()
 
-    my_bot = Picture(_token)
+    my_bot = PictureBot(_token)
     my_bot.start()
 
