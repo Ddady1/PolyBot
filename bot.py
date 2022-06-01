@@ -45,7 +45,7 @@ class QuoteBot(Bot):
 class YoutubeBot(Bot):
     def _message_handler(self, update, context):
         videoname=update.message.text
-        search_download_youtube_video(video_name=videoname, num_results=2)
+        search_download_youtube_video(video_name=videoname, num_results=1)
 
 
 
