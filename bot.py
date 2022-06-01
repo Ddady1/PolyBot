@@ -1,7 +1,7 @@
 from telegram.ext import Updater, MessageHandler, Filters
 from utils import search_download_youtube_video
 from loguru import logger
-
+import os
 
 class Bot:
 
@@ -39,17 +39,20 @@ class QuoteBot(Bot):
         if update.message.text == 'Don\'t quote me please':
             to_quote = False
 
-        self.send_text(update, f'Your original message : {update.message.text}', quote=to_quote)
+        self.send_text(update, f'Quote message  : {update.message.text}', quote=to_quote)
 
 
 class YoutubeBot(Bot):
-    pass
+    def _message_handler(self, update, context):
+        videoname=update.message.text
+        search_download_youtube_video(video_name=videoname, num_results=2)
+
 
 
 if __name__ == '__main__':
     with open('.telegramToken') as f:
         _token = f.read()
 
-    my_bot = Bot(_token)
+    my_bot = YoutubeBot(_token)
     my_bot.start()
 
