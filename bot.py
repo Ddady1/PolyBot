@@ -1,7 +1,7 @@
 from telegram.ext import Updater, MessageHandler, Filters
 from utils import search_download_youtube_video
 from loguru import logger
-from downloadpicture import picture_download_url
+#from downloadpicture import picture_download_url
 
 class Bot:
 
@@ -56,6 +56,6 @@ if __name__ == '__main__':
     with open('.telegramToken') as f:
         _token = f.read()
 
-    my_bot = PictureBot(_token)
+    my_bot = YoutubeBot(_token)
     my_bot.start()
 
