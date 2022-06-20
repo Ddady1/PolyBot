@@ -1,6 +1,7 @@
 from telegram.ext import Updater, MessageHandler, Filters
 from utils import search_download_youtube_video
 from loguru import logger
+import youtube_dl
 #from downloadpicture import picture_download_url
 
 class Bot:
@@ -30,6 +31,10 @@ class Bot:
         """Sends text to a chat"""
         # retry https://github.com/python-telegram-bot/python-telegram-bot/issues/1124
         update.message.reply_text(text, quote=quote)
+
+    def search_download_youtube_video(self, video_name, num_results):
+
+
 
 
 class QuoteBot(Bot):
