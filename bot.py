@@ -32,7 +32,7 @@ class Bot:
         # retry https://github.com/python-telegram-bot/python-telegram-bot/issues/1124
         update.message.reply_text(text, quote=quote)
 
-    def search_download_youtube_video(self, video_name, num_results):
+
 
 
 
