@@ -1,6 +1,7 @@
 from telegram.ext import Updater, MessageHandler, Filters
 from utils import search_download_youtube_video
 from loguru import logger
+import os
 #from downloadpicture import picture_download_url
 
 class Bot:
@@ -45,7 +46,10 @@ class QuoteBot(Bot):
 class YoutubeBot(Bot):
     def _message_handler(self, update, context):
         videoname=update.message.text
-        search_download_youtube_video(video_name=videoname, num_results=1)
+        v_name = search_download_youtube_video(video_name=videoname, num_results=1)
+        v_name = ''.join(v_name)
+        wrkdir = os.getcwd() + '\\' + v_name
+        self.send_video(update, context, wrkdir)
 
 class PictureBot(Bot):
     def _message_handler(self, update, context):
