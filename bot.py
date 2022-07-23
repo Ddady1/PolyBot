@@ -1,7 +1,7 @@
 from telegram.ext import Updater, MessageHandler, Filters
 from utils import search_download_youtube_video
 from loguru import logger
-#import os - only when running localy
+import os #- only when running localy
 
 class Bot:
 
@@ -45,10 +45,12 @@ class QuoteBot(Bot):
 class YoutubeBot(Bot):
     def _message_handler(self, update, context):
         videoname = update.message.text
+        self.send_text(update, 'Downloading video...')
         v_name = search_download_youtube_video(video_name=videoname, num_results=1)
         v_name = ''.join(v_name)
-        #wrkdir = os.getcwd() + '\\' + v_name   'use only when running local and use Import OS'
-        self.send_video(update, context, v_name)
+        #wrkdir = os.getcwd() + '\\' + v_name   #use only when running local and use Import OS
+        self.send_text(update, f'The video clip {v_name} was downloaded and soon will be playing')
+        self.send_video(update, context, v_name) #Use wrkdir when working locally and v_name when online
 
 
 if __name__ == '__main__':
