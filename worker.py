@@ -1,13 +1,25 @@
 import json
+import logging
 import time
 import boto3
 import botocore
+from botocore.exceptions import ClientError
 from loguru import logger
 from utils import search_download_youtube_video
 
 
 def process_msg(msg):
-    search_download_youtube_video(msg)
+    v_name = search_download_youtube_video(msg)
+    v_name = ''.join(v_name)
+    s3_client = boto3.client('s3')
+    try:
+        response = s3_client.upload_file(v_name, 'dady-kosta-s3')
+    except ClientError as e:
+        logging.error(e)
+        return False
+    return True
+
+
 
     # TODO upload the downloaded video to your S3 bucket
 
