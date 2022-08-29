@@ -30,7 +30,8 @@ def calc_backlog_per_instance(sqs_queue_client, asg_client, asg_group_name):
             backlog_per_instance = msgs_in_queue / asg_size
 
         logger.info(f'backlog per instance: {backlog_per_instance}')
-        cloudwatch = boto3.client('cloudwatch')
+        AWS_REGION = 'eu-west-1'
+        cloudwatch = boto3.client('cloudwatch', region_name=AWS_REGION)
         cloudwatch.put_metric_data(
             Namespace='dady-kosta-metric',
             MetricData=[
