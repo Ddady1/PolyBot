@@ -6,13 +6,20 @@ pipeline {
             args  '--user root -v /var/run/docker.sock:/var/run/docker.sock'
         }
     }
+    environment {
+        REGISTRY_URL = "352708296901.dkr.ecr.eu-west-1.amazonaws.com/ddady-jen-dev-botbuild"
+        IMAGE_TAG = "0.0.$BUILD_NUMBER"
+        IMAGE_NAME = "ddady-dev-botbuild"
+    }
 
     stages {
         stage('Build') {
             steps {
                 // TODO dev bot build stage
                 sh '''
-                echo "building..."
+                docker build -t $IMAGE_NAME .
+                docker tag $IMAGE_NAME $REGISTRY_URL/$IMAGE_NAME:$IMAGE_TAG
+                docker push $REGISTRY_URL/$IMAGE_NAME:$IMAGE_TAG
                 '''
             }
         }
@@ -20,7 +27,7 @@ pipeline {
         stage('Trigger Deploy') {
             steps {
                 build job: 'BotDeploy', wait: false, parameters: [
-                    string(name: 'BOT_IMAGE_NAME', value: "<image-name>")
+                    string(name: 'BOT_IMAGE_NAME', value: "$IMAGE_NAME:$IMAGE_TAG")
                 ]
             }
         }
