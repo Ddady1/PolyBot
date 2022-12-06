@@ -27,7 +27,7 @@ pipeline {
         stage('Trigger Deploy') {
             steps {
                 build job: 'BotDeploy', wait: false, parameters: [
-                    string(name: 'BOT_IMAGE_NAME', value: "$IMAGE_NAME:$IMAGE_TAG")
+                    string(name: 'BOT_IMAGE_NAME', value: "352708296901.dkr.ecr.eu-west-1.amazonaws.com/ddady-agent-ecr:latest")
                 ]
             }
         }
