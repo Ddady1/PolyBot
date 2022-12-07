@@ -17,7 +17,7 @@ pipeline {
             steps {
                 // TODO dev bot build stage
                 sh '''
-                docker build -t $IMAGE_NAME .
+                docker build -f services/bot/Dockerfile -t $IMAGE_NAME .
                 docker tag $IMAGE_NAME $REGISTRY_URL/$IMAGE_NAME:$IMAGE_TAG
                 docker push $REGISTRY_URL/$IMAGE_NAME:$IMAGE_TAG
                 '''
