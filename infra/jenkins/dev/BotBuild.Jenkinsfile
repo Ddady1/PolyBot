@@ -7,7 +7,7 @@ pipeline {
         }
     }
     environment {
-        REGISTRY_URL = "352708296901.dkr.ecr.eu-west-1.amazonaws.com/ddady-jen-dev-botbuild"
+        REGISTRY_URL = "352708296901.dkr.ecr.eu-west-1.amazonaws.com"
         IMAGE_TAG = "0.0.$BUILD_NUMBER"
         IMAGE_NAME = "ddady-dev-botbuild"
     }
@@ -27,7 +27,7 @@ pipeline {
         stage('Trigger Deploy') {
             steps {
                 build job: 'BotDeploy', wait: false, parameters: [
-                    string(name: 'BOT_IMAGE_NAME', value: "352708296901.dkr.ecr.eu-west-1.amazonaws.com/ddady-agent-ecr:latest")
+                    string(name: 'BOT_IMAGE_NAME', value: "${REGISTRY_URL}/${IMAGE_NAME}:${IMAGE_TAG}")
                 ]
             }
         }
