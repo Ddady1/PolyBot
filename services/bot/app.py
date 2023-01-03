@@ -1,6 +1,6 @@
 import json
 import botocore
-from telegram.ext import Updater, MessageHandler, Filters
+from telegram.ext import Updater, MessageHandler, filters
 from loguru import logger
 import boto3
 
@@ -12,7 +12,7 @@ class Bot:
         self.updater = Updater(token, use_context=True)
 
         # add _message_handler as main internal msg handler
-        self.updater.dispatcher.add_handler(MessageHandler(Filters.text, self._message_handler))
+        self.updater.dispatcher.add_handler(MessageHandler(filters.Filters.text, self._message_handler))
 
     def start(self):
         """Start polling msgs from users, this function never returns"""
