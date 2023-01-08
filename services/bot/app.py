@@ -52,6 +52,8 @@ class YoutubeObjectDetectBot(Bot):
         super().__init__(token)
 
     def _message_handler(self, update, context):
+        chat_id = str(update.effective_message.chat_id) #Initiate message on startup
+        self.send_text(chat_id=chat_id, text="Hi and welcome to ddadys bot") #Initiate message on startup
         try:
             chat_id = str(update.effective_message.chat_id)
             response = workers_queue.send_message(
@@ -61,7 +63,7 @@ class YoutubeObjectDetectBot(Bot):
                 }
             )
             logger.info(f'msg {response.get("MessageId")} has been sent to queue')
-            self.send_text(update, f'Your message is being processed...!', chat_id=chat_id)
+            self.send_text(update, f'Your message is being processed...', chat_id=chat_id)
 
         except botocore.exceptions.ClientError as error:
             logger.error(error)
