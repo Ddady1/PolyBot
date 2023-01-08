@@ -18,6 +18,7 @@ class Bot:
         """Start polling msgs from users, this function never returns"""
         self.updater.start_polling()
         logger.info(f'{self.__class__.__name__} is up and listening to new messages....')
+        self.send_text('WELCOME!!!') #sending message line 21
         self.updater.idle()
 
     def _message_handler(self, update, context):
@@ -28,7 +29,7 @@ class Bot:
         """Sends video to a chat"""
         context.bot.send_video(chat_id=update.message.chat_id, video=open(file_path, 'rb'), supports_streaming=True)
 
-    def send_text(self, update, text, chat_id=None, quote=True): #originaly 'False'
+    def send_text(self, update, text, chat_id=None, quote=False):
         """Sends text to a chat"""
         if chat_id:
             self.updater.bot.send_message(chat_id, text=text)
