@@ -52,8 +52,7 @@ class YoutubeObjectDetectBot(Bot):
         super().__init__(token)
 
     def _message_handler(self, update, context):
-        chat_id = str(update.effective_message.chat_id) #Initiate message on startup
-        self.send_text(chat_id=chat_id, text="Hi and welcome to ddadys bot") #Initiate message on startup
+
         try:
             chat_id = str(update.effective_message.chat_id)
             response = workers_queue.send_message(
