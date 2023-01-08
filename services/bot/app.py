@@ -28,7 +28,7 @@ class Bot:
         """Sends video to a chat"""
         context.bot.send_video(chat_id=update.message.chat_id, video=open(file_path, 'rb'), supports_streaming=True)
 
-    def send_text(self, update, text, chat_id=None, quote=False):
+    def send_text(self, update, text, chat_id=None, quote=True): #originaly 'False'
         """Sends text to a chat"""
         if chat_id:
             self.updater.bot.send_message(chat_id, text=text)
