@@ -1,8 +1,11 @@
 import json
+import time
+
 import botocore
 from telegram.ext import Updater, MessageHandler, Filters
 from loguru import logger
 import boto3
+from botocore.exceptions import ClientError
 
 
 
@@ -38,14 +41,20 @@ class Bot:
             update.message.reply_text(text, quote=quote)
 
     #test from here until line 49 include
-    def file_exist(self, filename):
+    def file_exist(self, update, filename):
         bucket_name = config.get('videos_bucket')
-        if wr.s3.does_object_exist(f's3://{bucket_name}/{filename}'):
-            return True
-            #self.send_text(update, f'The video {filename} was uploaded to S3') # test
-        else:
-            return False
-            #self.send_text(update, f'The video {filename} is not exist on S3')
+        s3 = boto3.resource('s3')
+        chk = 1
+        try:
+            s3.Object(bucket_name, filename).load()
+        except botocore.exceptions.ClientError as e:
+            if e.response['Error']['Code'] == "404":
+                self.send_text(update, f'Check No: {chk}.The video {filename} is not exist on S3. Will check again in 5 sec')
+                chk += 1
+                time.sleep(5)
+            else:
+                self.send_text(update, f'The video {filename} was uploaded to S3')
+
 
 
 class QuoteBot(Bot):
