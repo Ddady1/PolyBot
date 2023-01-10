@@ -3,6 +3,7 @@ import botocore
 from telegram.ext import Updater, MessageHandler, Filters
 from loguru import logger
 import boto3
+import awswrangler as wr
 
 
 class Bot:
@@ -52,7 +53,8 @@ class YoutubeObjectDetectBot(Bot):
         super().__init__(token)
 
     def _message_handler(self, update, context):
-        self.send_text(update, 'Please press 1 for List') #test
+        videoname = update.message.text # test
+
         try:
             chat_id = str(update.effective_message.chat_id)
             response = workers_queue.send_message(
@@ -67,6 +69,16 @@ class YoutubeObjectDetectBot(Bot):
         except botocore.exceptions.ClientError as error:
             logger.error(error)
             self.send_text(update, f'Something went wrong, please try again...')
+
+        self.file_exist(self, update, videoname)
+
+    #test from here until line 81 include
+    def file_exist(self,update, filename):
+        bucket_name = config.get('videos_bucket')
+        if wr.s3.does_object_exist(f's3://{bucket_name}/{filename}'):
+            self.send_text(update, f'The video {filename} was uploaded to S3')  # test
+        else:
+            self.send_text(update, f'The video {filename} is not exist on S3')
 
 
 if __name__ == '__main__':
