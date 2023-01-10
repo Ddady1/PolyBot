@@ -43,7 +43,7 @@ class Bot:
         bucket_name = config.get('videos_bucket')
         if wr.s3.does_object_exist(f's3://{bucket_name}/{filename}'):
             return True
-            #self.send_text(update, f'The video {filename} was uploaded to S3')  # test
+            #self.send_text(update, f'The video {filename} was uploaded to S3') # test
         else:
             return False
             #self.send_text(update, f'The video {filename} is not exist on S3')
