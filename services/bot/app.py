@@ -3,8 +3,7 @@ import botocore
 from telegram.ext import Updater, MessageHandler, Filters
 from loguru import logger
 import boto3
-import awswrangler as wr
-import time
+
 
 
 class Bot:
