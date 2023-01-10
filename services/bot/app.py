@@ -18,7 +18,6 @@ class Bot:
         """Start polling msgs from users, this function never returns"""
         self.updater.start_polling()
         logger.info(f'{self.__class__.__name__} is up and listening to new messages....')
-        self.send_text('WELCOME!!!') #sending message line 21
         self.updater.idle()
 
     def _message_handler(self, update, context):
@@ -53,7 +52,7 @@ class YoutubeObjectDetectBot(Bot):
         super().__init__(token)
 
     def _message_handler(self, update, context):
-
+        self.send_text(update, 'Please press 1 for List') #test
         try:
             chat_id = str(update.effective_message.chat_id)
             response = workers_queue.send_message(
