@@ -64,7 +64,7 @@ class YoutubeObjectDetectBot(Bot):
         super().__init__(token)
 
     def _message_handler(self, update, context):
-        videoname = update.message.text # test
+
         try:
             chat_id = str(update.effective_message.chat_id)
             response = workers_queue.send_message(
@@ -81,7 +81,7 @@ class YoutubeObjectDetectBot(Bot):
         except botocore.exceptions.ClientError as error:
             logger.error(error)
             self.send_text(update, f'Something went wrong, please try again...')
-        self.send_text(update, f'Video name is: {videoname}')
+        self.send_text(update, f'Video name is:', chat_id=chat_id)
 
 
 
