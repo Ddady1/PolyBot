@@ -81,7 +81,7 @@ class YoutubeObjectDetectBot(Bot):
         except botocore.exceptions.ClientError as error:
             logger.error(error)
             self.send_text(update, f'Something went wrong, please try again...')
-        self.send_text(update, f'Video name is:', chat_id=chat_id)
+
 
 
 
