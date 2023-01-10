@@ -4,6 +4,7 @@ from telegram.ext import Updater, MessageHandler, Filters
 from loguru import logger
 import boto3
 import awswrangler as wr
+import time
 
 
 class Bot:
@@ -37,6 +38,16 @@ class Bot:
             # retry https://github.com/python-telegram-bot/python-telegram-bot/issues/1124
             update.message.reply_text(text, quote=quote)
 
+    #test from here until line 81 include
+    def file_exist(self, filename):
+        bucket_name = config.get('videos_bucket')
+        if wr.s3.does_object_exist(f's3://{bucket_name}/{filename}'):
+            return True
+            #self.send_text(update, f'The video {filename} was uploaded to S3')  # test
+        else:
+            return False
+            #self.send_text(update, f'The video {filename} is not exist on S3')
+
 
 class QuoteBot(Bot):
     def _message_handler(self, update, context):
@@ -54,7 +65,7 @@ class YoutubeObjectDetectBot(Bot):
 
     def _message_handler(self, update, context):
         videoname = update.message.text # test
-
+        status = False
         try:
             chat_id = str(update.effective_message.chat_id)
             response = workers_queue.send_message(
@@ -65,20 +76,21 @@ class YoutubeObjectDetectBot(Bot):
             )
             logger.info(f'msg {response.get("MessageId")} has been sent to queue')
             self.send_text(update, f'Your message is being processed...', chat_id=chat_id)
+            i_chk = 1
+            time.sleep(5)
+            while not status:
+                self.send_text(update, f'The file is still uploading to S3: Check No:{i_chk}')
+                status = self.file_exist(videoname)
+                i_chk += 1
+
 
         except botocore.exceptions.ClientError as error:
             logger.error(error)
             self.send_text(update, f'Something went wrong, please try again...')
 
-        self.file_exist(self, update, videoname)
 
-    #test from here until line 81 include
-    def file_exist(self,update, filename):
-        bucket_name = config.get('videos_bucket')
-        if wr.s3.does_object_exist(f's3://{bucket_name}/{filename}'):
-            self.send_text(update, f'The video {filename} was uploaded to S3')  # test
-        else:
-            self.send_text(update, f'The video {filename} is not exist on S3')
+
+
 
 
 if __name__ == '__main__':
