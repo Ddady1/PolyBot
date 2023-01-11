@@ -40,7 +40,7 @@ class Bot:
             # retry https://github.com/python-telegram-bot/python-telegram-bot/issues/1124
             update.message.reply_text(text, quote=quote)
 
-    #test from here until line 49 include
+    #test from here until line 56 include
     def file_exist(self, update, filename):
         bucket_name = config.get('videos_bucket')
         s3 = boto3.resource('s3')
@@ -49,7 +49,7 @@ class Bot:
             s3.Object(bucket_name, filename).load()
         except botocore.exceptions.ClientError as e:
             if e.response['Error']['Code'] == "404":
-                self.send_text(update, f'Check No: {chk}.The video {filename} is not exist on S3. Will check again in 5 sec')
+                self.send_text(update, f'Check No: {chk}.The video {filename} doesn\'t exist on S3. Will check again in 5 sec')
                 chk += 1
                 time.sleep(5)
             else:
@@ -83,13 +83,15 @@ class YoutubeObjectDetectBot(Bot):
             )
             logger.info(f'msg {response.get("MessageId")} has been sent to queue')
             self.send_text(update, f'Your message is being processed...', chat_id=chat_id)
-            self.send_text(update, f'The file name is {update.message.text}')
+            self.send_text(update, f'The file name is {update.message.text}') #test
+            self.file_exist(update.message.text) #test
 
 
 
         except botocore.exceptions.ClientError as error:
             logger.error(error)
             self.send_text(update, f'Something went wrong, please try again...')
+
 
 
 
