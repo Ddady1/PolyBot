@@ -41,19 +41,24 @@ class Bot:
             update.message.reply_text(text, quote=quote)
 
     #test from here until line 56 include
-    def file_exist(self, update, chat_id, filename):
-        '''bucket_name = config.get('videos_bucket')
+    #def file_exist(self, update, chat_id, filename):
+    def file_exist(self, filename):
+        bucket_name = config.get('videos_bucket')
         s3 = boto3.resource('s3')
         chk = 1
+        false_message = f'Check No: {chk}. The video {filename} doesn\'t exist on S3. Will check again in 5 sec'
+        ok_message = f'The video {filename} was uploaded successfully to S3'
         try:
             s3.Object(bucket_name, filename).load()
         except botocore.exceptions.ClientError as e:
             if e.response['Error']['Code'] == "404":
-                self.send_text(update, f'Check No: {chk}.The video {filename} doesn\'t exist on S3. Will check again in 5 sec')
+                return false_message
+                #self.send_text(update, f'Check No: {chk}.The video {filename} doesn\'t exist on S3. Will check again in 5 sec')
                 chk += 1
                 time.sleep(5)
             else:
-                self.send_text(update, f'The video {filename} was uploaded to S3')'''
+                return ok_message
+                #self.send_text(update, f'The video {filename} was uploaded to S3')
         #print(chat_id, filename)
         #self.send_text(update, f'file {filename} uploaded', chat_id=chat_id)
 
@@ -87,6 +92,7 @@ class YoutubeObjectDetectBot(Bot):
             self.send_text(update, f'Your message is being processed...', chat_id=chat_id)
             self.send_text(update, f'The file name is {v_name}') #test
             self.send_text(update, f'UPDATE = {update}, Video name = {v_name}, CHAT = {chat_id}')
+            self.send_text(update, self.file_exist(v_name))
             #self.file_exist(update, v_name, chat_id) #test
 
 
