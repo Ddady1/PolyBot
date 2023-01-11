@@ -13,6 +13,8 @@ def process_msg(msg):
     for video in downloaded_videos:
         s3.upload_file(video, config.get('videos_bucket'), video)
         os.remove(f'./{video}')
+        with open('common/s3_file.txt', "a") as fileS3:
+            fileS3.write(video)
 
 
 def main():

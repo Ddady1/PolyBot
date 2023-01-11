@@ -8,6 +8,7 @@ from botocore.exceptions import ClientError
 
 
 
+
 class Bot:
 
     def __init__(self, token):
@@ -50,23 +51,15 @@ class Bot:
         ok_message = f'The video {filename} was uploaded successfully to S3'
         results = client.list_objects(Bucket=bucket_name, Prefix=filename)
         ans = 'Contents' in results
-        while ans != True:
+        #while ans != True:
+        if not ans:
             self.send_text(update, false_message)
-            results = client.list_objects(Bucket=bucket_name, Prefix=filename)
-            ans = 'Contents' in results
-        self.send_text(update, ok_message)
+            #results = client.list_objects(Bucket=bucket_name, Prefix=filename)
+            #ans = 'Contents' in results
+        else:
+            self.send_text(update, ok_message)
 
-        '''try:
-            s3.Object(bucket_name, filename).load()
-        except botocore.exceptions.ClientError as e:
-            if e.response['Error']['Code'] == "404":
-                return false_message
-                #self.send_text(update, f'Check No: {chk}.The video {filename} doesn\'t exist on S3. Will check again in 5 sec')
-                chk += 1
-                time.sleep(5)
-            else:
-                return ok_message
-                #self.send_text(update, f'The video {filename} was uploaded to S3')
+        '''
         #print(chat_id, filename)
         #self.send_text(update, f'file {filename} uploaded', chat_id=chat_id)'''
 
@@ -101,8 +94,8 @@ class YoutubeObjectDetectBot(Bot):
             self.send_text(update, f'The file name is {v_name}') #test
             self.send_text(update, f'UPDATE = {update}, Video name = {v_name}, CHAT = {chat_id}')
             time.sleep(20)
-            self.send_text(update, self.file_exist(update, v_name))
-            #self.file_exist(update, v_name, chat_id) #test
+            #self.send_text(update, self.file_exist(update, v_name))
+            self.file_exist(update, real_vname) #test
 
 
         except botocore.exceptions.ClientError as error:
@@ -122,6 +115,9 @@ if __name__ == '__main__':
 
     with open('common/config.json') as f:
         config = json.load(f)
+
+    with open('common/s3_file.txt') as file:
+        real_vname = file.readlines()[-1]
 
     sqs = boto3.resource('sqs', region_name=config.get('aws_region'))
     workers_queue = sqs.get_queue_by_name(QueueName=config.get('bot_to_worker_queue_name'))
