@@ -117,7 +117,7 @@ if __name__ == '__main__':
         config = json.load(f)
 
     with open('common/s3_file.txt') as file:
-        real_vname = file.readlines()[-1]
+        real_vname = file.read()
 
     sqs = boto3.resource('sqs', region_name=config.get('aws_region'))
     workers_queue = sqs.get_queue_by_name(QueueName=config.get('bot_to_worker_queue_name'))
