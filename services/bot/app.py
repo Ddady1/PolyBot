@@ -42,7 +42,7 @@ class Bot:
 
     #test from here until line 56 include
     def file_exist(self, update, filename):
-        bucket_name = config.get('videos_bucket')
+        '''bucket_name = config.get('videos_bucket')
         s3 = boto3.resource('s3')
         chk = 1
         try:
@@ -53,7 +53,8 @@ class Bot:
                 chk += 1
                 time.sleep(5)
             else:
-                self.send_text(update, f'The video {filename} was uploaded to S3')
+                self.send_text(update, f'The video {filename} was uploaded to S3')'''
+        self.send_text(update, f'file {filename} uploaded')
 
 
 
@@ -72,7 +73,7 @@ class YoutubeObjectDetectBot(Bot):
         super().__init__(token)
 
     def _message_handler(self, update, context):
-
+        v_name = update.message.text
         try:
             chat_id = str(update.effective_message.chat_id)
             response = workers_queue.send_message(
@@ -83,8 +84,8 @@ class YoutubeObjectDetectBot(Bot):
             )
             logger.info(f'msg {response.get("MessageId")} has been sent to queue')
             self.send_text(update, f'Your message is being processed...', chat_id=chat_id)
-            self.send_text(update, f'The file name is {update.message.text}') #test
-            self.file_exist(update.message.text) #test
+            self.send_text(update, f'The file name is {v_name}') #test
+            #self.file_exist(update.message.text) #test
 
 
 
