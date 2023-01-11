@@ -54,7 +54,8 @@ class Bot:
                 time.sleep(5)
             else:
                 self.send_text(update, f'The video {filename} was uploaded to S3')'''
-        self.send_text(update, f'file {filename} uploaded', chat_id=chat_id)
+        print(update, chat_id, filename)
+        #self.send_text(update, f'file {filename} uploaded', chat_id=chat_id)
 
 
 
