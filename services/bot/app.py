@@ -54,7 +54,7 @@ class Bot:
                 time.sleep(5)
             else:
                 self.send_text(update, f'The video {filename} was uploaded to S3')'''
-        print(update, chat_id, filename)
+        #print(chat_id, filename)
         #self.send_text(update, f'file {filename} uploaded', chat_id=chat_id)
 
 
@@ -86,7 +86,8 @@ class YoutubeObjectDetectBot(Bot):
             logger.info(f'msg {response.get("MessageId")} has been sent to queue')
             self.send_text(update, f'Your message is being processed...', chat_id=chat_id)
             self.send_text(update, f'The file name is {v_name}') #test
-            self.file_exist(update, v_name, chat_id) #test
+            print(v_name, update, chat_id)
+            #self.file_exist(update, v_name, chat_id) #test
 
 
 
