@@ -98,7 +98,7 @@ class YoutubeObjectDetectBot(Bot):
             time.sleep(5)
             #self.send_text(update, self.file_exist(update, v_name))
 
-            self.file_exist(update, real_vname) #test
+            self.file_exist(update, response) #test
 
 
         except botocore.exceptions.ClientError as error:
