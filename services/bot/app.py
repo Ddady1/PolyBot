@@ -81,8 +81,7 @@ class YoutubeObjectDetectBot(Bot):
 
     def _message_handler(self, update, context):
         v_name = update.message.text
-        with open('common/s3_file.txt') as file:
-            real_vname = file.readlines()[-1]
+
         try:
             chat_id = str(update.effective_message.chat_id)
             response = workers_queue.send_message(
@@ -94,11 +93,13 @@ class YoutubeObjectDetectBot(Bot):
             logger.info(f'msg {response.get("MessageId")} has been sent to queue')
             self.send_text(update, f'Your message is being processed...', chat_id=chat_id)
             self.send_text(update, f'The file name is {v_name}') #test
+            with open('common/s3_file.txt') as file:
+                real_vname = file.readlines()[-1]
             #self.send_text(update, f'UPDATE = {update}, Video name = {v_name}, CHAT = {chat_id}')
             time.sleep(5)
             #self.send_text(update, self.file_exist(update, v_name))
 
-            self.file_exist(update, response) #test
+            self.file_exist(update, real_vname) #test
 
 
         except botocore.exceptions.ClientError as error:
@@ -119,8 +120,8 @@ if __name__ == '__main__':
     with open('common/config.json') as f:
         config = json.load(f)
 
-    with open('common/s3_file.txt', "a") as fileS3:
-        fileS3.write('main of bot\n')
+    #with open('common/s3_file.txt', "a") as fileS3:
+        #fileS3.write('main of bot\n')
 
 
 
