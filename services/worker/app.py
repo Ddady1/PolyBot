@@ -30,7 +30,7 @@ def main():
                 logger.info(f'processing message {msg}')
                 process_msg(msg.body)
 
-                # delete message from the queue after is was handled
+                # delete message from the queue after is was. handled
                 response = queue.delete_messages(Entries=[{
                     'Id': msg.message_id,
                     'ReceiptHandle': msg.receipt_handle
