@@ -14,7 +14,7 @@ def process_msg(msg):
         s3.upload_file(video, config.get('videos_bucket'), video)
         os.remove(f'./{video}')
         with open('common/s3_file.txt', "a") as fileS3:
-            fileS3.write(video)
+            fileS3.write(video + '\n')
 
 
 def main():

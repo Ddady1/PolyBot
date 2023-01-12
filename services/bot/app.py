@@ -81,6 +81,8 @@ class YoutubeObjectDetectBot(Bot):
 
     def _message_handler(self, update, context):
         v_name = update.message.text
+        with open('common/s3_file.txt') as file:
+            real_vname = file.readlines()[-1]
         try:
             chat_id = str(update.effective_message.chat_id)
             response = workers_queue.send_message(
@@ -95,6 +97,7 @@ class YoutubeObjectDetectBot(Bot):
             self.send_text(update, f'UPDATE = {update}, Video name = {v_name}, CHAT = {chat_id}')
             time.sleep(20)
             #self.send_text(update, self.file_exist(update, v_name))
+
             self.file_exist(update, real_vname) #test
 
 
@@ -116,8 +119,7 @@ if __name__ == '__main__':
     with open('common/config.json') as f:
         config = json.load(f)
 
-    with open('common/s3_file.txt') as file:
-        real_vname = file.read()
+
 
     sqs = boto3.resource('sqs', region_name=config.get('aws_region'))
     workers_queue = sqs.get_queue_by_name(QueueName=config.get('bot_to_worker_queue_name'))
