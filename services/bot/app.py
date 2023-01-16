@@ -120,7 +120,7 @@ if __name__ == '__main__':
     with open('common/config.json') as f:
         config = json.load(f)
 
-    #with open('common/s3_file.txt', "a") as fileS3: #NOT WORKING
+    #with open('common/s3_file.txt', "a") as fileS3: #The bot print it, bot doesn't write to the file and worker doesn't work
         #fileS3.write('main of bot\n')
 
 
