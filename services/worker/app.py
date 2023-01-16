@@ -7,11 +7,11 @@ from common.utils import search_download_youtube_video
 import os
 
 
+
 def process_msg(msg):
     downloaded_videos = search_download_youtube_video(msg)
     s3 = boto3.client('s3')
     for video in downloaded_videos:
-        videolink = ''.join(video) #added 160123:22:03
         s3.upload_file(video, config.get('videos_bucket'), video)
         #with open('common/s3_file.txt', "a") as fileS3:
             #fileS3.write(video + '\n')

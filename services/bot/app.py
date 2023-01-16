@@ -5,7 +5,6 @@ from telegram.ext import Updater, MessageHandler, Filters
 from loguru import logger
 import boto3
 from botocore.exceptions import ClientError
-from services.worker.app import videolink#added 160123:22:03
 
 
 
@@ -101,7 +100,7 @@ class YoutubeObjectDetectBot(Bot):
             #self.send_text(update, self.file_exist(update, v_name))
 
             self.file_exist(update, real_vname) #test
-            self.send_video(update, context, videolink)#added 160123:22:03
+            self.send_video(update, context,)#added 160123:22:03
 
 
         except botocore.exceptions.ClientError as error:
