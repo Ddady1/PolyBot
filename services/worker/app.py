@@ -13,9 +13,11 @@ def process_msg(msg):
     for video in downloaded_videos:
         video = ''.join(video) #added 160123:18:46
         s3.upload_file(video, config.get('videos_bucket'), video)
-        with open('common/s3_file.txt', "a") as fileS3:
-            fileS3.write(video + '\n')
+        #with open('common/s3_file.txt', "a") as fileS3:
+            #fileS3.write(video + '\n')
         os.remove(f'./{video}')
+        with open('common/s3_file.txt', 'w') as fileS3: #added 160123:19:53
+            fileS3.write('from worker in def process')
 
 
 
@@ -48,8 +50,8 @@ if __name__ == '__main__':
     with open('common/config.json') as f:
         config = json.load(f)
 
-    with open('common/s3_file.txt', "a") as fileS3:
-        fileS3.write('main of worker\n')
+    #with open('common/s3_file.txt', "a") as fileS3: #Not working here
+        #fileS3.write('main of worker\n')
 
     sqs = boto3.resource('sqs', region_name=config.get('aws_region'))
     queue = sqs.get_queue_by_name(QueueName=config.get('bot_to_worker_queue_name'))
