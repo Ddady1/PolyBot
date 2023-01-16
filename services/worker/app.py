@@ -11,13 +11,12 @@ def process_msg(msg):
     downloaded_videos = search_download_youtube_video(msg)
     s3 = boto3.client('s3')
     for video in downloaded_videos:
-        video = ''.join(video) #added 160123:18:46
+        videolink = ''.join(video) #added 160123:22:03
         s3.upload_file(video, config.get('videos_bucket'), video)
         #with open('common/s3_file.txt', "a") as fileS3:
             #fileS3.write(video + '\n')
         os.remove(f'./{video}')
-        with open('common/s3_file.txt', 'w') as fileS3: #added 160123:19:53
-            fileS3.write('from worker in def process')
+
 
 
 
