@@ -63,12 +63,12 @@ class Bot:
         #print(chat_id, filename)
         #self.send_text(update, f'file {filename} uploaded', chat_id=chat_id)'''
 
-    def s3_list (self):#added 160123:23:25
+    '''def s3_list (self):#added 160123:23:25
         bucket_name = config.get('videos_bucket')
         client = boto3.resource('s3')
         my_bucket = client.list_objects(bucket_name)
         for myobj in my_bucket.objects.all():
-            self.send_text(myobj)
+            self.send_text(myobj)'''
 
 
 
@@ -88,8 +88,8 @@ class YoutubeObjectDetectBot(Bot):
 
     def _message_handler(self, update, context):
         v_name = update.message.text
-        if v_name == 'l_s3':#added 160123:23:25
-            self.s3_list()#added 160123:23:25
+        '''if v_name == 'l_s3':#added 160123:23:25
+            self.s3_list()#added 160123:23:25'''
         try:
             chat_id = str(update.effective_message.chat_id)
             response = workers_queue.send_message(
