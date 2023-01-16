@@ -120,8 +120,8 @@ if __name__ == '__main__':
     with open('common/config.json') as f:
         config = json.load(f)
 
-    #with open('common/s3_file.txt', "a") as fileS3:
-        #fileS3.write('main of bot\n')
+    with open('common/s3_file.txt', "a") as fileS3: #added 160123 18:56
+        fileS3.write('main of bot\n')
 
 
 
