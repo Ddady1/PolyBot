@@ -40,7 +40,7 @@ class Bot:
             # retry https://github.com/python-telegram-bot/python-telegram-bot/issues/1124
             update.message.reply_text(text, quote=quote)
 
-    #test from here until line 56 include
+    #test from here until line 56 includee
     #def file_exist(self, update, chat_id, filename):
     def file_exist(self, update, filename):
         bucket_name = config.get('videos_bucket')
