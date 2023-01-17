@@ -51,12 +51,14 @@ class Bot:
         ok_message = f'The video {filename} was uploaded successfully to S3'
         results = client.list_objects(Bucket=bucket_name, Prefix=filename)
         ans = 'Contents' in results
-        #while ans != True:
-        if not ans:
+        while ans != True and chk <=5:
+        #if not ans:
             self.send_text(update, false_message)
-            #results = client.list_objects(Bucket=bucket_name, Prefix=filename)
-            #ans = 'Contents' in results
-        else:
+            chk += 1
+            time.sleep(10)
+            results = client.list_objects(Bucket=bucket_name, Prefix=filename)
+            ans = 'Contents' in results
+        if ans:
             self.send_text(update, ok_message)
 
         '''
