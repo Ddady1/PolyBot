@@ -8,17 +8,24 @@ import os
 
 
 
-def process_msg(msg):
+def process_msg(msg, chatID):
     downloaded_videos = search_download_youtube_video(msg)
     s3 = boto3.client('s3')
     for video in downloaded_videos:
-        s3.upload_file(video, config.get('videos_bucket'), video)
-        #with open('common/s3_file.txt', "a") as fileS3:
-            #fileS3.write(video + '\n')
+        s3.upload_file(video, config.get('videos_bucket'), f'{chatID}/{video}')
+        #s3.upload_file(f'./new/{video}', config.get('videos_bucket'), video)
         os.remove(f'./{video}')
 
 
+'''def is_folder_exists(path):
+    s3 = boto3.resource('s3')
+    bucket = s3.Bucket(config.get('videos_bucket'))
+    for folder_object in bucket.objects.filter(Prefix=path):
+        return True
+    return False
 
+
+def create_folder(path)'''
 
 def main():
     while True:
@@ -28,9 +35,11 @@ def main():
                 MaxNumberOfMessages=1,
                 WaitTimeSeconds=10
             )
+            #print(queue.receive_messages(MessageAttributeNames=['All']))
+            #print(messages)
             for msg in messages:
                 logger.info(f'processing message {msg}')
-                process_msg(msg.body)
+                process_msg(msg.body, msg.message_attributes['chat_id']['StringValue'])
 
                 # delete message from the queue after is was. handled
                 response = queue.delete_messages(Entries=[{
