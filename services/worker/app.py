@@ -17,15 +17,11 @@ def process_msg(msg, chatID):
         os.remove(f'./{video}')
 
 
-'''def is_folder_exists(path):
-    s3 = boto3.resource('s3')
-    bucket = s3.Bucket(config.get('videos_bucket'))
-    for folder_object in bucket.objects.filter(Prefix=path):
-        return True
-    return False
+def send_upload_flag(bucket):
+    file = 'services/worker/exist_flag'
+    s3 = boto3.client('s3')
+    s3.upload_file(file, bucket, 'exist_file')
 
-
-def create_folder(path)'''
 
 def main():
     while True:
@@ -48,6 +44,7 @@ def main():
                 }])
                 if 'Successful' in response:
                     logger.info(f'msg {msg} has been handled successfully')
+                    send_upload_flag(config.get('videos_bucket'))
 
         except botocore.exceptions.ClientError as err:
             logger.exception(f"Couldn't receive messages {err}")
