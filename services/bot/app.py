@@ -255,7 +255,7 @@ class Bot:
 
 
     def info_link(self, filename):
-        # Creating the object info link
+        # Creating the object info link.
         splitted = filename.split(' - ')
         full = []
         for item in splitted:
