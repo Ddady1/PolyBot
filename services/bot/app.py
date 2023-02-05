@@ -9,11 +9,10 @@ import re
 import pandas as pd
 import datetime
 from pytz import timezone
-import urllib.request
+import requests
 
 
-
-
+counter = 0
 class Bot:
 
     def __init__(self, token):
@@ -49,7 +48,6 @@ class Bot:
     def file_exist(self, update, filename):
         bucket_name = config.get('videos_bucket')
         chat_id = str(update.effective_message.chat_id)
-        #s3 = boto3.resource('s3')
         client = boto3.client('s3')
         check = 1
         false_message = f'Check No: {check:n}. The video {filename} doesn\'t exist on S3. Will check again in 5 sec'
@@ -57,7 +55,6 @@ class Bot:
         results = client.list_objects(Bucket=bucket_name, Prefix=chat_id)
         ans = 'Contents' in results
         while ans != True and check <= 5:
-        #if not ans:
             self.send_text(update, false_message)
             check += 1
             time.sleep(1)
@@ -164,6 +161,7 @@ class Bot:
 
 
     def delete_flag(self, bucket, filename):
+        # Deleting the flag file which represents that the object was uploaded
         client = boto3.client('s3')
         client.delete_object(Bucket=bucket, Key=filename)
         logger.info('The flag file was deleted.successfully!')
@@ -176,7 +174,7 @@ class Bot:
         # Menus function for interaction with the users
         if re.search('/smenu', phrase, re.IGNORECASE) or phrase == '/???':
             self.send_text(update, 'Welcome to Telgram bot MENU! \nType /sList - To list bucket objects. \nType /sDel - To delete an object. \nType /sEmpty - To empty the bucket'\
-                                   '\nType /sGit - To update swear file\nType /sLink!<song number>- To get some song inf.')
+                                   '\nType /sGit - To update swear file\nType /sLink!<song number>- To get some song inf - Mot working yet.')
         elif re.search('/slist', phrase, re.IGNORECASE):
             chat_folder_exist = self.s3_chat_folder(config.get('videos_bucket'), str(update.effective_message.chat_id))
             if chat_folder_exist:
@@ -206,10 +204,9 @@ class Bot:
         elif re.search('/sgit', phrase, re.IGNORECASE):
             self.send_text(update, 'Updating git file')
             self.git_import()
-        elif re.search('\A/slink', phrase, re.IGNORECASE):
-            self.get_latest(update, config.get('videos_bucket'))
-            self.send_text(update, 'https://www.songfacts.com/facts/the-jacksons/blame-it-on-the-boogie')
-            self.send_text(update, 'https://www.youtube.com/watch?v=g_jUtiKSf1Y')
+        #elif re.search('\A/slink', phrase, re.IGNORECASE):
+        #    self.get_latest(update, config.get('videos_bucket'))
+
         elif phrase == 'DELETE PERMANENTLY':
             self.s3_empty_bucket(update, config.get('videos_bucket'))
         #elif phrase == 'exist_file':
@@ -266,6 +263,14 @@ class Bot:
         return songfact
 
 
+    def check_link_valid(self, link):
+
+        response = requests.get(link)
+        if response.status_code == 200:
+            return True
+        else:
+            return False
+
 
 
 class QuoteBot(Bot):
@@ -299,8 +304,25 @@ class YoutubeObjectDetectBot(Bot):
             return'''
 
         isSwear = self.is_swear(v_name)
+
+        # Checking the times a user swears (not finished)
         if isSwear:
-            self.send_text(update, 'According to the BOT policy, swearing is NOT allowed,\nSO DONT SWEAR U MFUCKER \U0001F595')
+            result = self.s3_chat_folder(config.get('videos_bucket'), str(update.effective_message.chat_id))
+            if result:
+                global counter
+                counter += 1
+                if counter == 3:
+                    self.send_text(update, f'This is your STRIKE {counter}. Your bucket is Deleted!!!')
+                    counter = 0
+                    return
+                else:
+                    self.send_text(update, 'According to the BOT policy, swearing is NOT allowed,\nSO DONT SWEAR U MFUCKER \U0001F595\n'\
+                                f'This is STRIKE {counter}. On STRIKE 3, You\'re OUT!!!')
+                return
+            else:
+                s3 = boto3.client('s3')
+                s3.upload_file(str(update.effective_message.chat_id), config.get('videos_bucket'), f'{str(update.effective_message.chat_id)}/')
+
             return
 
         menu_results = self.menu(update, v_name)
@@ -329,7 +351,11 @@ class YoutubeObjectDetectBot(Bot):
             video_link = self.make_link(self.strip_youtube_code(actual_name, chat_id))
             self.send_text(update, video_link)
             info_link = self.info_link(self.strip_parenthesis(actual_name))
-            self.send_text(update, info_link)
+            link_check = self.check_link_valid(info_link)
+            if link_check:
+                self.send_text(update, info_link)
+            else:
+                self.send_text(update, 'Sorry, no data for this song on ''SONGFACT'' site. Checking on other sites')
 
 
 

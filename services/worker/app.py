@@ -17,6 +17,16 @@ def process_msg(msg, chatID):
         os.remove(f'./{video}')
 
 
+def delete_flag(bucket, filename):
+    # Deleting the flag file which represents that the object was uploaded
+
+    client = boto3.client('s3')
+    result = client.list_objects_v2(Bucket=bucket, Prefix=filename)
+    if 'Contents' in result:
+        client.delete_object(Bucket=bucket, Key=filename)
+    logger.info('The flag file was deleted.successfully!')
+
+
 def send_upload_flag(bucket):
     file = 'services/worker/exist_flag'
     s3 = boto3.client('s3')
@@ -35,6 +45,7 @@ def main():
             #print(messages)
             for msg in messages:
                 logger.info(f'processing message {msg}')
+                delete_flag(config.get('videos_bucket'), 'exist_file')
                 process_msg(msg.body, msg.message_attributes['chat_id']['StringValue'])
 
                 # delete message from the queue after is was. handled
